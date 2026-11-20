@@ -3,22 +3,31 @@
 > 本檔為跨 Agent 通用的專案藍圖（AGENTS.md 開放標準）。任何 Agent 的每個 session 都應先讀本檔＋`handoff.md`。
 
 ## 專案簡介
-閱讀測驗系統與內容開發專案。
+《孫悟空三借芭蕉扇》國語文閱讀測驗系統、教學網頁與全班即時多人對戰競技場。
 
 ## 關鍵時程
-<!-- 格式：- 事件名稱：日期（說明）；沒有就留白 -->
+- 專案發布與上線：2026-11-20
 
 ## 目標與路線圖
-- [ ] 階段一：專案基礎建設與規格確認
-- [ ] 階段二：閱讀測驗內容與功能開發
-- [ ] 階段三：測試與上線/交付
+- [x] 階段一：專案基礎建設與規格確認 (L1/L2/L3 初始化完成)
+- [x] 階段二：PDF 文字抽驗、校對與 Word/TXT 講義檔製作
+- [x] 階段三：互動教學網頁建置（包含全班多人大亂鬥對戰模式、朗讀、測驗與工具）
+- [x] 階段四：部署上線至 GitHub Pages
 
 ## 資料夾結構
 ```
 C:\1151120
 ├── .gitignore
+├── .github/
+│   └── workflows/
+│       └── pages.yml              # GitHub Pages 自動部署工作流
 ├── AGENTS.md
-└── handoff.md
+├── handoff.md
+├── 孫悟空三借芭蕉扇.pdf              # 原始素材 PDF
+├── 孫悟空三借芭蕉扇.txt              # UTF-8 純文字檔
+├── 孫悟空三借芭蕉扇.docx             # 排版 Word 文件
+└── 教學網頁/
+    └── index.html                 # 互動教學與全班多人對戰單檔網頁
 ```
 
 ## 同步層級（本專案初始化至第 3 層級）
@@ -28,6 +37,10 @@ C:\1151120
 | L1 | 本地 | `AGENTS.md`＋`handoff.md` | 每個 session |
 | L2 | GitHub | rayilin/reading-quiz | 指定時 |
 | L3 | Obsidian | 1151120/專案工作流程.md | 有需要時 |
+
+## 上線網址
+- **教學網頁與全班對戰**：[https://rayilin.github.io/reading-quiz/](https://rayilin.github.io/reading-quiz/)
+- **GitHub Repo**：[https://github.com/rayilin/reading-quiz](https://github.com/rayilin/reading-quiz)
 
 ## 工作約定
 - 任何 Agent、任何電腦：**開工先讀 `handoff.md`，收工必更新 `handoff.md`**
