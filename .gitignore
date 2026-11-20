@@ -6,3 +6,5 @@ desktop.ini
 credentials.*
 node_modules/
 dist/
+*_pdf_ocr/
+create_docs.py
