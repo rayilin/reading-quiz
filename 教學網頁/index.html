@@ -233,7 +233,7 @@
                         </div>
                         <div class="mt-4 pt-4 border-t border-white/10 text-xs text-slate-400 flex items-center justify-between">
                             <span><i class="fa-solid fa-wifi text-emerald-400"></i> 對戰伺服器連線狀態：即時廣播就緒</span>
-                            <span>全班同步 10 秒計時搶答</span>
+                            <span>全班同步 15 秒計時搶答</span>
                         </div>
                     </div>
                 </div>
@@ -254,12 +254,24 @@
                     </div>
 
                     <!-- 題目與選擇肢 -->
-                    <div class="bg-white/10 backdrop-blur border border-white/15 p-6 sm:p-8 rounded-2xl">
-                        <h4 id="qTitle" class="text-xl sm:text-2xl font-bold text-white mb-6 leading-relaxed">
+                    <div class="bg-white/10 backdrop-blur border border-white/15 p-6 sm:p-8 rounded-2xl space-y-6">
+                        <h4 id="qTitle" class="text-xl sm:text-2xl font-bold text-white leading-relaxed">
                             題目讀取中...
                         </h4>
+                        
+                        <!-- 選項列表 -->
                         <div id="qOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <!-- 動態填入選項按鈕 -->
+                        </div>
+
+                        <!-- 答題確認與鎖定反饋面板 -->
+                        <div id="answerSubmitControl" class="pt-2 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div id="answerStatusHint" class="text-sm text-slate-300 flex items-center gap-2">
+                                <i class="fa-solid fa-hand-pointer text-amber-400"></i> 請點擊上方選項後，按「確定送出答案」
+                            </div>
+                            <button id="btnConfirmAnswer" onclick="confirmAndLockAnswer()" disabled class="w-full sm:w-auto px-8 py-3 bg-slate-700 text-slate-400 cursor-not-allowed font-bold rounded-xl text-base transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-check-double"></i> 確定送出答案 (不可更改)
+                            </button>
                         </div>
                     </div>
 
@@ -478,7 +490,7 @@
                 question: "靈吉菩薩給了孫悟空什麼寶物，讓他不再被芭蕉扇吹走？",
                 options: ["避火珠", "定風丹", "金箍棒", "芭蕉葉"],
                 answer: 1,
-                explain: "靈吉菩薩贈送「定风丹」給孫悟空。"
+                explain: "靈吉菩薩贈送「定風丹」給孫悟空。"
             }
         ];
 
@@ -591,6 +603,8 @@
         let battleTimer = null;
         let currentQIndex = 0;
         let qTimeLeft = 15;
+        let selectedOptionIndex = null; // 當前暫存選中的選項
+        let isAnswerLocked = false;       // 當前題目是否已經鎖定答案
 
         // 全班預設座號 01~30 號預設玩家
         const CLASS_STUDENTS = [
@@ -672,17 +686,19 @@
             qTimeLeft = 15;
             document.getElementById("qTimer").innerText = qTimeLeft;
 
-            // 重置玩家本題答題狀態
+            // 重置答題鎖定與選取狀態
+            selectedOptionIndex = null;
+            isAnswerLocked = false;
             roomPlayers.forEach(p => p.answered = false);
 
-            // 渲染選單
-            const optionsDiv = document.getElementById("qOptions");
-            optionsDiv.innerHTML = q.options.map((opt, idx) => `
-                <button onclick="submitPlayerAnswer(${idx})" class="p-4 rounded-xl bg-white/10 hover:bg-brand-600 border border-white/20 hover:border-brand-500 text-left text-white font-bold text-base transition flex items-center gap-3 group">
-                    <span class="w-8 h-8 rounded-lg bg-white/10 group-hover:bg-white/20 flex items-center justify-center font-mono">${String.fromCharCode(65 + idx)}</span>
-                    <span>${opt}</span>
-                </button>
-            `).join("");
+            // 渲染選項按鈕
+            renderBattleOptions(q);
+
+            // 重置確認按鈕狀態
+            const btnConfirm = document.getElementById("btnConfirmAnswer");
+            btnConfirm.disabled = true;
+            btnConfirm.className = "w-full sm:w-auto px-8 py-3 bg-slate-700 text-slate-400 cursor-not-allowed font-bold rounded-xl text-base transition flex items-center justify-center gap-2";
+            document.getElementById("answerStatusHint").innerHTML = `<i class="fa-solid fa-hand-pointer text-amber-400"></i> 請點擊上方選項後，按「確定送出答案」`;
 
             updateLiveLeaderboard();
 
@@ -703,25 +719,88 @@
             }, 1000);
         }
 
-        function submitPlayerAnswer(optIdx) {
+        function renderBattleOptions(q) {
+            const optionsDiv = document.getElementById("qOptions");
+            optionsDiv.innerHTML = q.options.map((opt, idx) => {
+                let btnStyle = "bg-white/10 hover:bg-white/20 border-white/20 text-white";
+                let badgeHTML = `<span class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center font-mono">${String.fromCharCode(65 + idx)}</span>`;
+                
+                if (selectedOptionIndex === idx) {
+                    if (isAnswerLocked) {
+                        btnStyle = "bg-emerald-600/90 border-emerald-400 text-white font-black shadow-lg ring-2 ring-emerald-400";
+                        badgeHTML = `<span class="w-8 h-8 rounded-lg bg-emerald-700 text-white flex items-center justify-center font-mono"><i class="fa-solid fa-lock"></i></span>`;
+                    } else {
+                        btnStyle = "bg-amber-500/90 border-amber-300 text-slate-900 font-black shadow-lg ring-2 ring-amber-400";
+                        badgeHTML = `<span class="w-8 h-8 rounded-lg bg-amber-600 text-slate-900 flex items-center justify-center font-mono"><i class="fa-solid fa-check"></i></span>`;
+                    }
+                } else if (isAnswerLocked) {
+                    btnStyle = "bg-white/5 border-white/5 text-slate-500 opacity-60 cursor-not-allowed";
+                }
+
+                return `
+                    <button onclick="selectBattleOption(${idx})" ${isAnswerLocked ? 'disabled' : ''} class="p-4 rounded-xl border text-left font-bold text-base transition flex items-center justify-between gap-3 ${btnStyle}">
+                        <div class="flex items-center gap-3">
+                            ${badgeHTML}
+                            <span>${opt}</span>
+                        </div>
+                        ${selectedOptionIndex === idx && !isAnswerLocked ? '<span class="text-xs bg-black/30 px-2.5 py-1 rounded-full text-amber-200">已點選</span>' : ''}
+                        ${selectedOptionIndex === idx && isAnswerLocked ? '<span class="text-xs bg-black/30 px-2.5 py-1 rounded-full text-emerald-200">🔒 已送出鎖定</span>' : ''}
+                    </button>
+                `;
+            }).join("");
+        }
+
+        // 學生點擊選擇某個選項（尚未鎖定）
+        function selectBattleOption(optIdx) {
+            if (isAnswerLocked) return;
+            selectedOptionIndex = optIdx;
+            
+            const q = QUIZ_DATA[currentQIndex];
+            renderBattleOptions(q);
+
+            // 啟用「確定送出答案」按鈕
+            const btnConfirm = document.getElementById("btnConfirmAnswer");
+            btnConfirm.disabled = false;
+            btnConfirm.className = "w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-900 font-black rounded-xl text-base shadow-lg shadow-orange-500/30 transition transform active:scale-95 flex items-center justify-center gap-2 pulse-fire";
+            document.getElementById("answerStatusHint").innerHTML = `<span class="text-amber-300 font-bold"><i class="fa-solid fa-circle-dot"></i> 已點選選項 (${String.fromCharCode(65 + optIdx)})，請按「確定送出答案」鎖定！</span>`;
+        }
+
+        // 學生點擊確定送出按鈕（答案鎖定無法再更改）
+        function confirmAndLockAnswer() {
+            if (selectedOptionIndex === null || isAnswerLocked) return;
+            
+            isAnswerLocked = true;
             const q = QUIZ_DATA[currentQIndex];
             const mainPlayer = roomPlayers[0];
-            if (mainPlayer && !mainPlayer.answered) {
+
+            if (mainPlayer) {
                 mainPlayer.answered = true;
-                if (optIdx === q.answer) {
+                if (selectedOptionIndex === q.answer) {
                     mainPlayer.score += 100 + qTimeLeft * 10;
                     mainPlayer.streak += 1;
                 } else {
                     mainPlayer.streak = 0;
                 }
-                updateLiveLeaderboard();
             }
+
+            // 更新選項狀態為鎖定
+            renderBattleOptions(q);
+
+            // 禁用送出按鈕並提示
+            const btnConfirm = document.getElementById("btnConfirmAnswer");
+            btnConfirm.disabled = true;
+            btnConfirm.className = "w-full sm:w-auto px-8 py-3 bg-emerald-800 text-emerald-200 cursor-not-allowed font-bold rounded-xl text-base transition flex items-center justify-center gap-2";
+            btnConfirm.innerHTML = `<i class="fa-solid fa-lock"></i> 答案已確定送出 (無法再更改)`;
+            
+            document.getElementById("answerStatusHint").innerHTML = `<span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check"></i> 答案已成功鎖定！等待本題倒數計時結束...</span>`;
+
+            updateLiveLeaderboard();
         }
 
         function simulateAIAnswers(q) {
             // 隨機模擬全班其他成員的答題節奏
             roomPlayers.forEach((p, idx) => {
-                if (idx !== 0 && !p.answered && Math.random() > 0.4) {
+                if (idx !== 0 && !p.answered && Math.random() > 0.45) {
                     p.answered = true;
                     // 正確率 75%
                     if (Math.random() < 0.75) {
