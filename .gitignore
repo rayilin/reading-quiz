@@ -8,3 +8,6 @@ node_modules/
 dist/
 *_pdf_ocr/
 create_docs.py
+export_ppt_thumbs.ps1
+soil_deck.pptx
+ppt_thumbs/
