@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>孫悟空三借芭蕉扇｜閱讀理解</title>
+
+  <!-- Reveal 5.1.0（版本固定，不要用 latest） -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" />
+
+  <style>
+    /* ==========================================================
+       全域：1280×720、基準字級 40px
+       → 0.4em=16px、0.5em=20px、1.35em=54px（標題）
+       ========================================================== */
+    :root {
+      --accent:  #e8643a;   /* 主強調（橘紅・火焰） */
+      --accent2: #4fc3f7;   /* 次強調（青・智取） */
+      --success: #81c784;
+      --warn:    #ffb74d;
+      --ink:     #0d1117;
+      --line:    rgba(255,255,255,0.12);
+    }
+    .reveal {
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', 'Segoe UI', sans-serif;
+      font-size: 40px;
+      color: #e6edf3;
+      letter-spacing: 0.01em;
+    }
+    .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+      font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+      font-weight: 900; text-transform: none; color: #fff;
+      letter-spacing: -0.01em; text-shadow: none;
+    }
+    .reveal h1 { font-size: 2.1em; line-height: 1.15; }
+    .reveal h2 { font-size: 1.35em; line-height: 1.25; margin-bottom: 0.35em; }
+    .reveal p, .reveal li { line-height: 1.65; }
+    .reveal .progress { color: var(--accent); height: 3px; }
+    .reveal .slide-number { font-size: 14px; color: #666; background: none; }
+    .reveal .fragment { opacity: 0.15; transition: all .35s ease; }
+    .reveal .fragment.visible { opacity: 1; }
+
+    /* 左右留白：Reveal 的 margin 只影響縮放，不會給內距，
+       內容若貼齊 1280 邊緣，投影時會頂到畫面邊界 */
+    .reveal .slides > section { padding: 0 56px; box-sizing: border-box; }
+
+    .kicker {
+      display: inline-block; font-size: 0.34em; font-weight: 700;
+      letter-spacing: 0.18em; color: var(--accent2);
+      border: 1px solid rgba(79,195,247,0.35); border-radius: 999px;
+      padding: 4px 14px; margin-bottom: 0.55em;
+    }
+    .note { font-size: 0.34em; color: #8fa1b4; text-align: center; margin-top: 0.8em; }
+    .note.dim { color: #6b7d92; }
+
+    /* ============ 封面／封底 ============ */
+    .title-slide { text-align: center; }
+    .title-slide .tag {
+      display: inline-block; background: var(--accent); color: #fff;
+      padding: 5px 18px; border-radius: 999px; font-size: 0.42em;
+      letter-spacing: 0.12em; margin-bottom: 0.9em; font-weight: 700;
+    }
+    .title-slide .desc { font-size: 0.44em; color: #9fb0c3; }
+    .title-slide .author { margin-top: 1.8em; font-size: 0.34em; color: #6b7d92; letter-spacing: 0.08em; }
+    .end-slide { text-align: center; }
+    .end-slide .big { font-size: 1.5em; margin-bottom: 0.25em; }
+    .end-slide .tagline { font-size: 0.46em; color: #9fb0c3; }
+
+    /* ============ 圖標（內嵌 SVG） ============ */
+    .ico { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 1.7;
+           stroke-linecap: round; stroke-linejoin: round; display: block; }
+    .ico-wrap {
+      width: 62px; height: 62px; margin: 0 auto 10px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 34px;
+      color: var(--accent2); background: rgba(79,195,247,0.09);
+      border: 1px solid rgba(79,195,247,0.28);
+      box-shadow: 0 0 22px rgba(79,195,247,0.16) inset;
+    }
+    .ico-wrap .ico { filter: drop-shadow(0 0 8px rgba(79,195,247,0.6)); }
+    .ico-wrap.warm { color: var(--warn); background: rgba(255,183,77,0.09); border-color: rgba(255,183,77,0.3); }
+    .ico-wrap.green { color: var(--success); background: rgba(129,199,132,0.1); border-color: rgba(129,199,132,0.3); }
+    .ico-wrap.fire { color: var(--accent); background: rgba(232,100,58,0.1); border-color: rgba(232,100,58,0.35); }
+
+    /* ============ 卡片格 ============ */
+    .grid { display: grid; gap: 14px; margin-top: 0.85em; }
+    .g2 { grid-template-columns: 1fr 1fr; }
+    .g3 { grid-template-columns: repeat(3, 1fr); }
+    .g4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: rgba(255,255,255,0.045); border: 1px solid var(--line);
+      border-radius: 12px; padding: 18px 14px; text-align: center;
+    }
+    .card .ct { font-size: 0.48em; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .card .cd { font-size: 0.4em; color: #a9b8c9; line-height: 1.55; }
+    .card.left { text-align: left; }
+    .card { padding: 24px 16px; }
+
+    /* 統計數字 */
+    .stat-row { display: flex; gap: 18px; justify-content: center; margin-top: 1em; }
+    .stat-card {
+      background: rgba(255,255,255,0.06); border: 1px solid var(--line);
+      border-radius: 12px; padding: 20px 26px; text-align: center; flex: 1;
+    }
+    .stat-card .num { font-size: 1.6em; font-weight: 900; color: var(--accent); line-height: 1; }
+    .stat-card .label { font-size: 0.38em; color: #ccc; margin-top: 8px; }
+
+    /* 表格 */
+    .tbl { width: 100%; border-collapse: collapse; font-size: 0.46em; margin-top: 0.7em; }
+    .tbl th, .tbl td { border: 1px solid rgba(255,255,255,0.16); padding: 11px 12px; text-align: left; }
+    .tbl th { background: rgba(79,195,247,0.12); color: var(--accent2); font-weight: 700; }
+    .tbl td { color: #c7d3e0; }
+
+    /* VS 對比 */
+    .vs-grid { display: grid; grid-template-columns: 1fr 56px 1fr; align-items: stretch; margin-top: 0.5em; }
+    .vs-col { background: rgba(255,255,255,0.045); border-radius: 12px; padding: 16px; }
+    .vs-col.left-col  { border-top: 3px solid var(--accent2); }
+    .vs-col.right-col { border-top: 3px solid var(--warn); }
+    .vs-label { font-size: 0.5em; font-weight: 800; margin-bottom: 8px; }
+    .vs-label.left { color: var(--accent2); } .vs-label.right { color: var(--warn); }
+    .vs-center { display: flex; align-items: center; justify-content: center; font-size: 0.9em; font-weight: 900; color: #46566a; }
+    .vs-col ul { font-size: 0.42em; list-style: none; padding: 0; margin: 0; text-align: left; }
+    .vs-col ul li { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); color: #c2cfdd; }
+    .vs-col ul li:last-child { border-bottom: none; }
+    .vs-col ul li::before { content: "✦ "; opacity: 0.5; }
+
+    /* 時間軸 */
+    .timeline { position: relative; padding-left: 34px; margin: 0.6em auto 0; max-width: 1000px; text-align: left; }
+    .timeline::before {
+      content: ''; position: absolute; left: 12px; top: 8px; bottom: 8px; width: 2px;
+      background: linear-gradient(to bottom, var(--accent2), var(--accent), transparent);
+    }
+    .timeline-item { position: relative; margin-bottom: 13px; font-size: 0.44em; }
+    .timeline-item::before {
+      content: ''; position: absolute; left: -26px; top: 6px; width: 9px; height: 9px;
+      border-radius: 50%; background: var(--accent); border: 2px solid #121a26;
+      box-shadow: 0 0 10px rgba(232,100,58,0.8);
+    }
+    .timeline-item .ti-t { color: var(--accent2); font-weight: 700; font-size: 1.12em; margin-bottom: 1px; }
+    .timeline-item .ti-d { color: #aab9c9; line-height: 1.55; }
+
+    /* 結論兩欄 */
+    .conclusion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 0.6em; }
+    .conclusion-card { border-radius: 12px; padding: 18px; font-size: 0.44em; text-align: left; }
+    .conclusion-card.positive { background: rgba(79,195,247,0.1); border: 1px solid rgba(79,195,247,0.32); }
+    .conclusion-card.caution  { background: rgba(255,183,77,0.09); border: 1px solid rgba(255,183,77,0.3); }
+    .conclusion-card .cc-title { font-size: 1.25em; font-weight: 800; margin-bottom: 10px; }
+    .conclusion-card.positive .cc-title { color: var(--accent2); }
+    .conclusion-card.caution  .cc-title { color: var(--warn); }
+    .conclusion-card ul { list-style: none; padding: 0; margin: 0; color: #c2cfdd; line-height: 1.85; }
+
+    /* ============ 本份簡報新增：火焰／風的動態 ============ */
+    @keyframes flicker {
+      0%, 100% { transform: scaleY(1) translateY(0); opacity: .92; }
+      50%      { transform: scaleY(1.14) translateY(-3px); opacity: 1; }
+    }
+    .flame { animation: flicker 1.7s ease-in-out infinite; transform-origin: bottom center; display: inline-block; }
+    .flame.delay { animation-delay: .55s; }
+    @keyframes fireGlow {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(232,100,58,.55)); }
+      50%      { filter: drop-shadow(0 0 28px rgba(232,100,58,1)); }
+    }
+    .glow-fire { animation: fireGlow 2.3s ease-in-out infinite; }
+    @keyframes windFlow {
+      0%   { transform: translateX(-16px); opacity: .15; }
+      50%  { opacity: 1; }
+      100% { transform: translateX(16px); opacity: .15; }
+    }
+    .windline { animation: windFlow 2.4s ease-in-out infinite; display: inline-block; }
+    .windline.d1 { animation-delay: .3s; }
+    .windline.d2 { animation-delay: .6s; }
+
+    /* 大字引用 */
+    .quote-box {
+      max-width: 980px; margin: 0.2em auto 0; padding: 22px 28px;
+      background: rgba(232,100,58,0.08); border-left: 5px solid var(--accent);
+      border-radius: 10px; font-size: 0.5em; color: #f0e6df; text-align: left; line-height: 1.7;
+    }
+    .quote-box .src { display: block; margin-top: 8px; font-size: 0.7em; color: #8fa1b4; }
+
+    /* 圓形大數字（三步流程用） */
+    .step-num {
+      width: 44px; height: 44px; border-radius: 50%; margin: 0 auto 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.5em; font-weight: 900; color: #111;
+      background: var(--accent); box-shadow: 0 0 18px rgba(232,100,58,.55);
+    }
+    .step-num.cool { background: var(--accent2); box-shadow: 0 0 18px rgba(79,195,247,.55); }
+    .step-num.warn { background: var(--warn); box-shadow: 0 0 18px rgba(255,183,77,.55); }
+  </style>
+</head>
+<body>
+
+<!-- ============ 內嵌 SVG 圖標庫 ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-leaf" viewBox="0 0 24 24">
+      <path d="M4 20c0-8 6-14 16-15 1 10-5 16-13 16H4z"/><path d="M4.5 19.5C8 15 12 12.5 17 11"/>
+    </symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/>
+    </symbol>
+    <symbol id="i-target" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/>
+    </symbol>
+    <symbol id="i-wind" viewBox="0 0 24 24">
+      <path d="M3 8h9a3 3 0 100-6"/><path d="M3 13h13a3 3 0 110 6"/><path d="M3 18h6"/>
+    </symbol>
+    <symbol id="i-water" viewBox="0 0 24 24">
+      <path d="M12 3s6 6.4 6 10.4A6 6 0 016 13.4C6 9.4 12 3 12 3z"/><path d="M9.5 14a2.6 2.6 0 002.5 2.6"/>
+    </symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9"/><path d="M12 7v5.5l3.5 2"/>
+    </symbol>
+    <symbol id="i-users" viewBox="0 0 24 24">
+      <circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/>
+      <path d="M16 5.2a3.2 3.2 0 010 5.6M17.5 14.4c2 .7 3.5 2.4 3.5 5.6"/>
+    </symbol>
+    <symbol id="i-fire" viewBox="0 0 24 24">
+      <path d="M12 3c3 3.4 5.5 5.8 5.5 9a5.5 5.5 0 11-11 0c0-1.7.7-3.1 1.9-4.6.5 1.3 1.3 2 2.3 2.3C10.1 8.3 10.7 5.8 12 3z"/>
+    </symbol>
+    <symbol id="i-sword" viewBox="0 0 24 24">
+      <path d="M14 4h6v6"/><path d="M20 4l-9.5 9.5"/><path d="M4 20l4.5-1.2"/><path d="M10.5 10.5l3 3"/>
+    </symbol>
+    <symbol id="i-mountain" viewBox="0 0 24 24">
+      <path d="M2 19l6.5-10 4 6 3-4.5L22 19z"/><path d="M6.6 12.6l1.9 1.4 1.6-1.6"/>
+    </symbol>
+    <symbol id="i-bug" viewBox="0 0 24 24">
+      <ellipse cx="12" cy="13" rx="3.6" ry="5"/><path d="M12 8v10"/>
+      <path d="M8.4 11H4M20 11h-4.4M8.4 15H4.5M19.5 15h-3.9"/>
+      <path d="M9 7.5L6.5 5M15 7.5L17.5 5"/>
+    </symbol>
+    <symbol id="i-crown" viewBox="0 0 24 24">
+      <path d="M3 18h18"/><path d="M3 18l-1-9 5.5 4L12 5l4.5 8L22 9l-1 9"/>
+    </symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24">
+      <path d="M12 3.5L22 20H2z"/><path d="M12 9.5v4.5"/><path d="M12 17h.01"/>
+    </symbol>
+    <symbol id="i-scroll" viewBox="0 0 24 24">
+      <path d="M6 3h11a2 2 0 012 2v14a2 2 0 01-2 2H6"/><path d="M6 3a2 2 0 00-2 2v1h4"/>
+      <path d="M9 9h7M9 13h7M9 17h4"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="reveal">
+  <div class="slides">
+
+    <!-- ① 封面 -->
+    <section
+      data-background-color="#0d1117"
+      data-background-gradient="radial-gradient(circle at 15% 20%, rgba(79,195,247,0.22), transparent 42%), radial-gradient(circle at 85% 80%, rgba(232,100,58,0.28), transparent 45%), repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 44px), linear-gradient(160deg, #0d1117 0%, #101a2b 55%, #16121f 100%)">
+      <div class="title-slide">
+        <div class="tag">國語文・高年級・西遊記 59–61 回</div>
+        <h1>孫悟空三借芭蕉扇</h1>
+        <h2 style="color:var(--accent); font-size:0.9em; margin-top:0.1em;">認清情勢，知所應變</h2>
+        <p class="desc">從火焰山的困境，看孫悟空如何一次次改變策略，<br>也看他為什麼最後還是失敗。</p>
+        <p class="author">閱讀高手 第 4 篇</p>
+      </div>
+    </section>
+
+    <!-- ② 故事地圖 -->
+    <section class="bg-deep" data-background-color="#0d1117"
+      data-background-gradient="radial-gradient(circle at 50% 120%, rgba(79,195,247,0.16), transparent 55%), linear-gradient(180deg, #0d1117 0%, #0f1622 100%)">
+      <span class="kicker">故事地圖</span>
+      <h2>一場過不去的旅程</h2>
+      <div class="grid g4">
+        <div class="card fragment">
+          <div class="ico-wrap"><svg class="ico"><use href="#i-users"/></svg></div>
+          <div class="ct">取經團隊</div>
+          <div class="cd">唐三藏、悟空、<br>八戒、悟淨</div>
+        </div>
+        <div class="card fragment">
+          <div class="ico-wrap fire"><svg class="ico flame"><use href="#i-fire"/></svg></div>
+          <div class="ct">火焰山</div>
+          <div class="cd">八百里烈焰，<br>往西必經之路</div>
+        </div>
+        <div class="card fragment">
+          <div class="ico-wrap warm"><svg class="ico"><use href="#i-sword"/></svg></div>
+          <div class="ct">翠雲山・芭蕉洞</div>
+          <div class="cd">鐵扇公主的地盤，<br>與悟空有舊仇</div>
+        </div>
+        <div class="card fragment">
+          <div class="ico-wrap green"><svg class="ico"><use href="#i-leaf"/></svg></div>
+          <div class="ct">芭蕉扇</div>
+          <div class="cd">搧熄火焰的<br>唯一法寶</div>
+        </div>
+      </div>
+      <p class="note">讀故事時問自己三件事：主角遇到什麼<strong style="color:var(--accent2)">難題</strong>？用什麼<strong style="color:var(--accent2)">方法</strong>解決？<strong style="color:var(--accent2)">結果</strong>如何？</p>
+    </section>
+
+    <!-- ③ 困境 -->
+    <section class="bg-deep" data-background-color="#0d1117"
+      data-background-gradient="radial-gradient(circle at 80% 0%, rgba(232,100,58,0.22), transparent 50%), linear-gradient(180deg, #0d1117 0%, #17100e 100%)">
+      <span class="kicker">起因</span>
+      <h2>困境：八百里火焰，寸草不生</h2>
+      <div class="stat-row">
+        <div class="stat-card fragment">
+          <div class="num">800<span style="font-size:0.4em">里</span></div>
+          <div class="label">火焰綿延的範圍</div>
+        </div>
+        <div class="stat-card fragment">
+          <div class="num">60<span style="font-size:0.4em">里</span></div>
+          <div class="label">悟空打聽到的距離</div>
+        </div>
+        <div class="stat-card fragment">
+          <div class="num">1<span style="font-size:0.4em">把</span></div>
+          <div class="label">唯一能滅火的法寶</div>
+        </div>
+      </div>
+      <div class="quote-box fragment" style="margin-top:0.7em;">
+        「就算是<strong style="color:var(--accent)">銅腦蓋，鐵身軀</strong>，也難越過此山。」
+        <span class="src">—— 連悟空的金剛不壞之身都擋不住，說明這不是靠硬闖能解決的難題</span>
+      </div>
+    </section>
+
+    <!-- ④ 三重威力 -->
+    <section class="bg-deep" data-background-color="#0d1117"
+      data-background-gradient="radial-gradient(circle at 50% 120%, rgba(232,100,58,0.16), transparent 55%), linear-gradient(180deg, #0d1117 0%, #14181f 100%)">
+      <span class="kicker">關鍵法寶</span>
+      <h2>芭蕉扇的三重威力</h2>
+      <div class="grid g3">
+        <div class="card fragment">
+          <div class="ico-wrap fire"><svg class="ico flame"><use href="#i-fire"/></svg></div>
+          <div class="ct">一搧 · 熄火</div>
+          <div class="cd">烈焰應聲熄滅</div>
+        </div>
+        <div class="card fragment">
+          <div class="ico-wrap"><svg class="ico windline"><use href="#i-wind"/></svg></div>
+          <div class="ct">二搧 · 生風</div>
+          <div class="cd">狂風大作，吹得人站不住</div>
+        </div>
+        <div class="card fragment">
+          <div class="ico-wrap green"><svg class="ico glow-fire" style="color:var(--success)"><use href="#i-water"/></svg></div>
+          <div class="ct">三搧 · 下雨</div>
+          <div class="cd">甘霖降下，澆熄餘火</div>
+        </div>
+      </div>
+      <div class="quote-box fragment" style="margin-top:0.6em;">
+        「傳言她有一把芭蕉扇，<strong style="color:var(--accent)">一搧熄火，二搧生風，三搧下雨</strong>。」
+        <span class="src">—— 課文第二段，先讓讀者知道這把扇子有多重要</span>
+      </div>
+      <p class="note">而它的「附帶效果」是：<strong style="color:var(--accent)">一搧能把人吹飛八萬四千里</strong>——孫悟空第一次只被吹了三千里。</p>
+    </section>
+
+    <!-- ⑤ 一借 -->
+    <section class="bg-deep" data-background-color="#0d1117"
+      data-background-gradient="radial-gradient(circle at 50% 120%, rgba(79,195,247,0.16), transparent 55%), linear-gradient(180deg, #0d1117 0%, #0f1622 100%)">
+      <span class="kicker">第一次借扇</span>
+      <h2>一借：硬碰硬，輸在實力</h2>
+      <div class="vs-grid">
+        <div class="vs-col left-col fragment">
+          <div class="vs-label left">孫悟空的做法</div>
+          <ul>
+            <li>直接到芭蕉洞，請小童通報</li>
+            <li>表明來意：借扇過火焰山</li>
+            <li>被砍也不還手，自恃毫髮無傷</li>
+          </ul>
+        </div>
+        <div class="vs-center">VS</div>
+        <div class="vs-col right-col fragment">
+          <div class="vs-label right">鐵扇公主的反應</div>
+          <ul>
+            <li>聽見「孫悟空」三字就一肚子火</li>
+            <li>提寶劍衝出洞口，乒乒乓乓砍下</li>
+            <li>打不過便取出芭蕉扇，一搧吹走</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">結果：悟空飄了一整夜，天亮才停在小須彌山——<strong style="color:var(--warn)">三千里外</strong>。</p>
+    </section>
+
+    <!-- ⑥ 二借 -->
+    <section class="bg-deep" data-background-color="#0d1117"
+      data-background-gradient="radial-gradient(circle at 20% 10%, rgba(79,195,247,0.2), transparent 48%), linear-gradient(180deg, #0d1117 0%, #0f1622 100%)">
+      <span class="kicker">第二次借扇</span>
+      <h2>二借：定風丹 ＋ 鑽腹計</h2>
+      <div class="timeline">
+        <div class="timeline-item fragment">
+          <div class="ti-t">① 求助靈吉菩薩</div>
+          <div class="ti-d">菩薩說明：扇子能把人吹八萬四千里，你只被吹三千里，算有本事了。</div>
+        </div>
+        <div class="timeline-item fragment">
+          <div class="ti-t">② 取得定風丹</div>
+          <div class="ti-d">吃下後「像在地上生了根」，任她怎麼搧都吹不走。</div>
+        </div>
+        <div class="timeline-item fragment">
+          <div class="ti-t">③ 變小蟲入腹</div>
+          <div class="ti-d">公主關門躲避，悟空變蟲從門縫鑽入，隱身茶沫，滑進她的肚子。</div>
+        </div>
+        <div class="timeline-item fragment">
+          <div class="ti-t">④ 逼出芭蕉扇</div>
+          <div class="ti-d">在腹中翻滾踢蹬，公主痛得求饒，允諾交扇——悟空歡歡喜喜拿去見師父。</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ⑦ 三借 -->
+    <section class="bg-deep" data-background-color="#0d1117"
+      data-background-gradient="radial-gradient(circle at 80% 0%, rgba(232,100,58,0.2), transparent 50%), linear-gradient(180deg, #0d1117 0%, #14181f 100%)">
+      <span class="kicker">第三次借扇</span>
+      <h2>三借：喬裝牛魔王，漏了最後一步</h2>
+      <div class="grid g3">
+        <div class="card fragment">
+          <div class="step-num cool">1</div>
+          <div class="ct">變身牛魔王</div>
+          <div class="cd">搖身一變回到芭蕉洞，騙得真扇，還問出讓扇子變長的口訣。</div>
+        </div>
+        <div class="card fragment">
+          <div class="step-num cool">2</div>
+          <div class="ct">扇子變長一丈二</div>
+          <div class="cd">念了口訣，扇子果然變長，悟空心中甚是得意。</div>
+        </div>
+        <div class="card fragment">
+          <div class="step-num warn">3</div>
+          <div class="ct">忘記問「還原口訣」</div>
+          <div class="cd">扇子收不回去，只能扛在肩上走——這一幕，被牛魔王看見了。</div>
+        </div>
+      </div>
+      <p class="note">三次上門，三次不同的方法：<strong style="color:var(--accent2)">懇求 → 奇招 → 喬裝</strong>。策略一直在進步，卻始終差最後一步。</p>
+    </section>
+
+    <!-- ⑧ 真扇 vs 假扇 -->
+    <section class="bg-deep" data-background-color="#0d1117"
+      data-background-gradient="radial-gradient(circle at 20% 100%, rgba(129,199,132,0.16), transparent 45%), radial-gradient(circle at 85% 0%, rgba(232,100,58,0.24), transparent 45%), linear-gradient(180deg, #0d1117 0%, #12171e 100%)">
+      <span class="kicker">轉折</span>
+      <h2>一搧之下，兩種命運</h2>
+      <div class="vs-grid">
+        <div class="vs-col left-col fragment">
+          <div class="vs-label left">真扇：火滅了</div>
+          <div style="text-align:center; font-size:1.1em; margin:10px 0;">
+            <svg class="ico" style="color:var(--success); width:56px; height:56px; display:inline-block;"><use href="#i-water"/></svg>
+          </div>
+          <ul>
+            <li>一搧火熄、二搧生風、三搧下雨</li>
+            <li>師徒順利過山，繼續西行</li>
+            <li>這才是唐僧要的結果</li>
+          </ul>
+        </div>
+        <div class="vs-center">VS</div>
+        <div class="vs-col right-col fragment">
+          <div class="vs-label right">假扇：火更旺</div>
+          <div style="text-align:center; font-size:1.1em; margin:10px 0;">
+            <svg class="ico flame glow-fire" style="color:var(--accent); width:56px; height:56px; display:inline-block;"><use href="#i-fire"/></svg>
+          </div>
+          <ul>
+            <li>一搧火光熊熊，再搧騰起百倍</li>
+            <li>三搧火足有千丈之高</li>
+            <li>一行人慌忙逃離，往東飛奔二十餘里</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">悟空怒說：「可惡！<strong style="color:var(--accent)">是我大意了！</strong>」——故事的第一個轉折點。</p>
+    </section>
+
+    <!-- ⑨ 以其人之道 -->
+    <section class="bg-deep" data-background-color="#0d1117"
+      data-background-gradient="radial-gradient(circle at 50% 120%, rgba(79,195,247,0.16), transparent 55%), linear-gradient(180deg, #0d1117 0%, #0f1622 100%)">
+      <span class="kicker">結局</span>
+      <h2>以其人之道，還治其人之身</h2>
+      <div class="conclusion-grid">
+        <div class="conclusion-card positive fragment">
+          <div class="cc-title">牛魔王的手法</div>
+          <ul>
+            <li>也會七十二變，念咒變作八戒嘴臉</li>
+            <li>「師兄辛苦了，我來幫忙拿吧！」</li>
+            <li>一拿到扇子立刻縮小收起，變回原形</li>
+          </ul>
+        </div>
+        <div class="conclusion-card caution fragment">
+          <div class="cc-title">悟空為什麼上當</div>
+          <ul>
+            <li>剛騙到扇子，正沾沾自喜</li>
+            <li>完全沒提防「師弟」會是敵人變的</li>
+            <li>「不疑有他，把扇子交了出去」</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">作者用「悟空騙人」對照「悟空被騙」——<strong style="color:var(--warn)">你怎麼贏來的，就可能怎麼失去</strong>。</p>
+    </section>
+
+    <!-- ⑩ 三種性格 -->
+    <section class="bg-deep" data-background-color="#0d1117"
+      data-background-gradient="radial-gradient(circle at 15% 20%, rgba(79,195,247,0.2), transparent 45%), radial-gradient(circle at 85% 80%, rgba(232,100,58,0.2), transparent 45%), linear-gradient(180deg, #0d1117 0%, #101a2b 100%)">
+      <span class="kicker">人物分析</span>
+      <h2>孫悟空的三種性格，各有文中證據</h2>
+      <div class="grid g3">
+        <div class="card fragment">
+          <div class="ico-wrap"><svg class="ico"><use href="#i-target"/></svg></div>
+          <div class="ct">勇往直前・盡忠職守</div>
+          <div class="cd">明知與鐵扇公主有奪子之仇，仍「硬著頭皮前往芭蕉洞」。</div>
+        </div>
+        <div class="card fragment">
+          <div class="ico-wrap fire"><svg class="ico"><use href="#i-bug"/></svg></div>
+          <div class="ct">機智靈變・不屈不撓</div>
+          <div class="cd">被吹走後求定風丹；變小蟲入腹、喬裝牛魔王，三度改變策略。</div>
+        </div>
+        <div class="card fragment">
+          <div class="ico-wrap warm"><svg class="ico"><use href="#i-alert"/></svg></div>
+          <div class="ct">粗心大意・容易得意</div>
+          <div class="cd">拿到假扇未先驗證；騙得真扇後忘問口訣，被牛魔王騙回。</div>
+        </div>
+      </div>
+      <p class="note">寫人物分析時，<strong style="color:var(--accent2)">「特質」一定要配「證據」</strong>，才是完整的答案。</p>
+    </section>
+
+    <!-- ⑪ 故事結構表 -->
+    <section class="bg-deep" data-background-color="#0d1117"
+      data-background-gradient="radial-gradient(circle at 50% 120%, rgba(79,195,247,0.16), transparent 55%), linear-gradient(180deg, #0d1117 0%, #0f1622 100%)">
+      <span class="kicker">統整</span>
+      <h2>故事結構一眼看懂</h2>
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th style="width:15%">結構</th>
+            <th style="width:27%">事件</th>
+            <th style="width:29%">悟空的做法</th>
+            <th style="width:29%">結果</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="fragment">
+            <td><strong style="color:var(--accent2)">起因</strong></td>
+            <td>火焰山擋住西行之路</td>
+            <td>受師命前往芭蕉洞借扇</td>
+            <td>明知有仇，仍得上門</td>
+          </tr>
+          <tr class="fragment">
+            <td><strong style="color:var(--accent2)">經過①</strong></td>
+            <td>一借：當面懇求</td>
+            <td>登門、說明來意</td>
+            <td>被一搧吹到三千里外</td>
+          </tr>
+          <tr class="fragment">
+            <td><strong style="color:var(--accent2)">經過②</strong></td>
+            <td>二借：定風丹＋鑽腹</td>
+            <td>求菩薩、變小蟲</td>
+            <td>拿到扇子——但是假的</td>
+          </tr>
+          <tr class="fragment">
+            <td><strong style="color:var(--accent2)">經過③</strong></td>
+            <td>三借：喬裝牛魔王</td>
+            <td>變身騙扇、學會變長</td>
+            <td>忘問還原口訣，被牛魔王騙回</td>
+          </tr>
+          <tr class="fragment">
+            <td><strong style="color:var(--warn)">主旨</strong></td>
+            <td colspan="3">遇到困難，要認清情勢、知所應變；成功時更要保持細心與警覺。</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="note">教學提示：先遮住「悟空的做法」欄，請學生猜猜他這次會怎麼做，再公布答案。</p>
+    </section>
+
+    <!-- ⑫ 封底 -->
+    <section class="bg-deep" data-background-color="#0d1117"
+      data-background-gradient="radial-gradient(circle at 15% 20%, rgba(79,195,247,0.22), transparent 42%), radial-gradient(circle at 85% 80%, rgba(232,100,58,0.28), transparent 45%), linear-gradient(160deg, #0d1117 0%, #101a2b 55%, #16121f 100%)">
+      <div class="end-slide">
+        <div class="big" style="color:var(--accent2);">遇到困難，<br>要認清情勢，知所應變。</div>
+        <p class="tagline">勝利的時候，更要記得檢查最後一步。<br><span style="font-size:0.8em; color:#5c6b7d;">—— 孫悟空三借芭蕉扇</span></p>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    width: 1280, height: 720, margin: 0.045,
+    minScale: 0.2, maxScale: 1.6,
+    transition: 'slide', backgroundTransition: 'fade',
+    center: true, progress: true, controls: true, slideNumber: 'c/t',
+    plugins: []
+  });
+</script>
+</body>
+</html>

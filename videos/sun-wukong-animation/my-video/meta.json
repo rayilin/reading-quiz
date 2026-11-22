@@ -1,0 +1,13 @@
+{
+  "title": "Sun Wukong and the Banana Leaf Fan",
+  "theme": {
+    "bg": "#121212",
+    "text": "#F2F0EA",
+    "accent": "#FF7A1A"
+  },
+  "frames": [
+    {"id": "p03", "title": "芭蕉扇機制", "duration": 18},
+    {"id": "p05", "title": "假扇子危機", "duration": 20},
+    {"id": "p07", "title": "智鬥騙扇", "duration": 20}
+  ]
+}

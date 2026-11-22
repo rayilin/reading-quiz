@@ -11,3 +11,6 @@ create_docs.py
 export_ppt_thumbs.ps1
 soil_deck.pptx
 ppt_thumbs/
+.playwright-mcp/
+slides/**/.review/
+教學網頁/media/
